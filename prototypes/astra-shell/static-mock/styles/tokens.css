@@ -2,13 +2,17 @@
   color-scheme: dark;
 
   --color-surface-base: #071113;
+  --color-surface-base-deep: #03090a;
+  --color-surface-rail: rgba(4, 15, 17, 0.76);
   --color-surface-elevated: rgba(16, 28, 31, 0.86);
   --color-surface-panel: rgba(22, 35, 39, 0.78);
   --color-surface-panel-strong: rgba(31, 45, 48, 0.94);
   --color-surface-control: rgba(255, 255, 255, 0.07);
   --color-surface-control-hover: rgba(255, 255, 255, 0.12);
+  --color-surface-control-active: rgba(85, 215, 210, 0.18);
   --color-border-subtle: rgba(210, 244, 238, 0.15);
   --color-border-strong: rgba(210, 244, 238, 0.28);
+  --color-border-focus: rgba(85, 215, 210, 0.9);
 
   --color-text-primary: #f1fbf8;
   --color-text-secondary: #b5c7c2;
@@ -22,6 +26,10 @@
   --color-warn: #edc969;
   --color-blocked: #ed7d7d;
   --color-info: #77aefb;
+  --color-safe-soft: rgba(117, 209, 138, 0.16);
+  --color-warn-soft: rgba(237, 201, 105, 0.16);
+  --color-blocked-soft: rgba(237, 125, 125, 0.14);
+  --color-info-soft: rgba(119, 174, 251, 0.15);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -34,11 +42,15 @@
   --radius-control: 8px;
   --radius-card: 8px;
   --radius-panel: 12px;
+  --radius-shell: 18px;
   --radius-round: 999px;
 
   --shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.34);
+  --shadow-panel-strong: 0 24px 64px rgba(0, 0, 0, 0.42);
   --shadow-control: 0 8px 18px rgba(0, 0, 0, 0.22);
+  --shadow-active: 0 0 0 1px rgba(85, 215, 210, 0.18), 0 14px 28px rgba(85, 215, 210, 0.08);
   --blur-panel: blur(18px);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
   --font-sans: Inter, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
   --font-size-label: 0.78rem;
@@ -64,7 +76,11 @@
 }
 
 .low-resource-mode {
-  --color-surface-panel: rgba(22, 35, 39, 0.96);
+  --color-surface-panel: rgba(22, 35, 39, 0.97);
+  --color-surface-rail: rgba(4, 15, 17, 0.98);
+  --color-surface-control: rgba(255, 255, 255, 0.09);
   --shadow-panel: 0 8px 20px rgba(0, 0, 0, 0.28);
+  --shadow-panel-strong: 0 10px 28px rgba(0, 0, 0, 0.32);
+  --shadow-active: 0 0 0 1px rgba(85, 215, 210, 0.2);
   --blur-panel: blur(0);
 }

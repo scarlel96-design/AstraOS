@@ -86,6 +86,7 @@
     const button = createElement("button", extraClass ? "action-button " + extraClass : "action-button", label);
     button.type = "button";
     button.dataset.route = route;
+    button.setAttribute("aria-label", label);
     return button;
   }
 
@@ -94,12 +95,14 @@
     button.type = "button";
     button.disabled = true;
     button.dataset.mockDisabled = "true";
+    button.setAttribute("aria-label", label);
     return button;
   }
 
-  function createPanel(title, copy) {
-    const panel = createElement("article", "panel");
-    panel.appendChild(createElement("h3", "panel-title", title));
+  function createPanel(title, copy, extraClass) {
+    const panel = createElement("article", extraClass ? "panel " + extraClass : "panel");
+    const titleElement = createElement("h3", "panel-title", title);
+    panel.appendChild(titleElement);
     if (copy) {
       panel.appendChild(createElement("p", "panel-copy", copy));
     }
@@ -127,18 +130,42 @@
   function createScreenShell(titleKey, descriptionKey) {
     const screen = createElement("div", "screen");
     const hero = createElement("section", "screen-hero");
+    const titleId = "screen-title-" + titleKey.replace(/[^a-zA-Z0-9]+/g, "-");
+    hero.setAttribute("aria-labelledby", titleId);
     hero.appendChild(createElement("p", "eyebrow", getString("app.phase")));
-    hero.appendChild(createElement("h2", "screen-title", getString(titleKey)));
+    const title = createElement("h2", "screen-title", getString(titleKey));
+    title.id = titleId;
+    hero.appendChild(title);
     hero.appendChild(createElement("p", "screen-description", getString(descriptionKey)));
 
     const tagRow = createElement("div", "tag-row");
     tagRow.appendChild(createTag(getString("status.localOnly"), "tag-safe"));
     tagRow.appendChild(createTag(getString("status.mockOnly"), "tag"));
     tagRow.appendChild(createTag(getString("status.noBridge"), "tag-danger"));
+    tagRow.appendChild(createTag(getString("status.noStorage"), "tag-info"));
     hero.appendChild(tagRow);
 
     screen.appendChild(hero);
     return screen;
+  }
+
+  function getVisibleNotificationCount() {
+    const mockData = getMockData();
+    return mockData.notifications.filter(function keepVisibleNotification(notification) {
+      return !appState.dismissedNotificationIds.has(notification.id);
+    }).length;
+  }
+
+  function createMetricCard(labelKey, value) {
+    const card = createElement("article", "metric-card");
+    card.appendChild(createElement("p", "eyebrow", getString(labelKey)));
+    card.appendChild(createElement("strong", "metric-value", value));
+    return card;
+  }
+
+  function getAppInitial(label) {
+    const normalizedLabel = safeText(label, "A").trim();
+    return normalizedLabel.length > 0 ? normalizedLabel.slice(0, 1).toUpperCase() : "A";
   }
 
   function renderLoginScreen() {
@@ -146,7 +173,7 @@
     const screen = createScreenShell("login.title", "login.description");
     const grid = createElement("section", "grid-two");
 
-    const userPanel = createPanel(mockData.currentUser.displayName, getString("security.noRealLogin"));
+    const userPanel = createPanel(mockData.currentUser.displayName, getString("security.noRealLogin"), "prominent");
     const input = createElement("input", "mock-input");
     input.type = "password";
     input.disabled = true;
@@ -171,6 +198,14 @@
   function renderDesktopScreen() {
     const mockData = getMockData();
     const screen = createScreenShell("route.desktop.title", "desktop.description");
+    const overview = createElement("section", "desktop-overview");
+    overview.setAttribute("aria-label", getString("section.systemSignals"));
+    overview.appendChild(createMetricCard("metric.routes", safeText(mockData.routes.length, "0")));
+    overview.appendChild(createMetricCard("metric.notifications", safeText(getVisibleNotificationCount(), "0")));
+    overview.appendChild(createMetricCard("metric.workspaces", safeText(mockData.workspaces.length, "0")));
+    overview.appendChild(createMetricCard("metric.storage", getString("metric.none")));
+    screen.appendChild(overview);
+
     const grid = createElement("section", "grid-two");
 
     const windowsPanel = createPanel(getString("section.mockWindows"), getString("security.mockDataOnly"));
@@ -201,10 +236,12 @@
   function createDockPreview() {
     const mockData = getMockData();
     const dock = createElement("section", "dock-preview");
+    dock.setAttribute("aria-label", getString("section.pinnedApps"));
     mockData.pinnedApps.forEach(function appendPinnedApp(app) {
       const button = createElement("button", "dock-button", getString(app.labelKey));
       button.type = "button";
       button.dataset.route = app.opensRoute;
+      button.setAttribute("aria-label", getString(app.labelKey));
       dock.appendChild(button);
     });
     return dock;
@@ -221,12 +258,15 @@
   function renderLauncherScreen() {
     const mockData = getMockData();
     const screen = createScreenShell("route.launcher.title", "launcher.description");
-    const grid = createElement("section", "grid-three");
+    const grid = createElement("section", "app-grid");
+    grid.setAttribute("aria-label", getString("section.pinnedApps"));
 
     mockData.pinnedApps.forEach(function appendLauncherCard(app) {
-      const panel = createPanel(getString(app.labelKey), getString("security.noOsCommand"));
+      const label = getString(app.labelKey);
+      const panel = createPanel(label, getString("security.noOsCommand"), "app-card");
+      panel.insertBefore(createElement("span", "app-initial", getAppInitial(label)), panel.firstChild);
       const actionRow = createElement("div", "action-row");
-      actionRow.appendChild(createActionButton(getString(app.labelKey), app.opensRoute, "primary"));
+      actionRow.appendChild(createActionButton(label, app.opensRoute, "primary"));
       actionRow.appendChild(createDisabledAction(getString("action.disabled")));
       panel.appendChild(actionRow);
       grid.appendChild(panel);
@@ -240,7 +280,7 @@
     const mockData = getMockData();
     const screen = createScreenShell("route.controlCenter.title", "controlCenter.description");
     const grid = createElement("section", "grid-two");
-    const quickPanel = createPanel(getString("section.quickSettings"), getString("security.noOsCommand"));
+    const quickPanel = createPanel(getString("section.quickSettings"), getString("security.noOsCommand"), "prominent");
     const toggleGrid = createElement("div", "toggle-grid");
 
     toggleGrid.appendChild(createToggleButton("status.localOnly", true, true));
@@ -264,6 +304,8 @@
     const label = getString(labelKeyOrText);
     const button = createElement("button", isActive ? "toggle-button is-active" : "toggle-button");
     button.type = "button";
+    button.setAttribute("aria-label", label);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
     button.appendChild(createElement("strong", "", label));
     button.appendChild(createElement("span", "", isLocked ? getString("status.disabledByDesign") : getString("status.mockOnly")));
     if (isLocked) {
@@ -285,6 +327,7 @@
     input.max = "100";
     input.value = safeText(value, "0");
     input.disabled = true;
+    input.setAttribute("aria-label", label);
     row.appendChild(input);
     return row;
   }
@@ -292,7 +335,7 @@
   function renderNotificationsScreen() {
     const mockData = getMockData();
     const screen = createScreenShell("route.notifications.title", "notifications.description");
-    const panel = createPanel(getString("route.notifications.title"), getString("security.mockDataOnly"));
+    const panel = createPanel(getString("section.notificationQueue"), getString("security.mockDataOnly"), "prominent");
     const visibleNotifications = mockData.notifications.filter(function keepVisibleNotification(notification) {
       return !appState.dismissedNotificationIds.has(notification.id);
     });
@@ -300,17 +343,31 @@
     if (visibleNotifications.length === 0) {
       panel.appendChild(createElement("div", "empty-state", getString("empty.notifications")));
     } else {
-      const list = createElement("ul", "mock-list");
+      const actionRow = createElement("div", "action-row");
+      const dismissAll = createElement("button", "action-button", getString("action.dismissAllNotifications"));
+      dismissAll.type = "button";
+      dismissAll.dataset.action = "dismiss-all-notifications";
+      actionRow.appendChild(dismissAll);
+      panel.appendChild(actionRow);
+
+      const list = createElement("ul", "notification-list");
       visibleNotifications.forEach(function appendNotification(notification) {
-        const item = createElement("li", "mock-list-item");
-        item.appendChild(createElement("p", "eyebrow", getString(notification.sourceKey)));
-        item.appendChild(createElement("p", "list-title", getString(notification.titleKey)));
-        item.appendChild(createElement("p", "list-copy", getString(notification.bodyKey)));
+        const severity = safeText(notification.severity, "info");
+        const item = createElement("li", "notification-item severity-" + severity);
+        item.appendChild(createElement("span", "notification-severity"));
+        const content = createElement("div", "notification-content");
+        const meta = createElement("div", "notification-meta");
+        meta.appendChild(createTag(getString(notification.sourceKey), severity === "warn" ? "tag-warn" : "tag-info"));
+        meta.appendChild(createTag(getString("status.previewOnly"), "tag-danger"));
+        content.appendChild(meta);
+        content.appendChild(createElement("p", "list-title", getString(notification.titleKey)));
+        content.appendChild(createElement("p", "list-copy", getString(notification.bodyKey)));
         const dismiss = createElement("button", "action-button", getString("action.dismissNotification"));
         dismiss.type = "button";
         dismiss.dataset.action = "dismiss-notification";
         dismiss.dataset.notificationId = notification.id;
-        item.appendChild(dismiss);
+        content.appendChild(dismiss);
+        item.appendChild(content);
         list.appendChild(item);
       });
       panel.appendChild(list);
@@ -331,6 +388,8 @@
       card.type = "button";
       card.dataset.action = "switch-workspace";
       card.dataset.workspaceId = workspace.id;
+      card.setAttribute("aria-pressed", isActive ? "true" : "false");
+      card.setAttribute("aria-label", getString(workspace.labelKey));
       card.appendChild(createElement("strong", "", getString(workspace.labelKey)));
       card.appendChild(createElement("span", "", formatWindowCount(workspace.windowCount)));
       const preview = createElement("span", "workspace-preview");
@@ -366,26 +425,38 @@
   function renderSecurityCenterScreen() {
     const screen = createScreenShell("route.securityCenter.title", "securityCenter.description");
     const grid = createElement("section", "grid-three");
+    grid.setAttribute("aria-label", getString("section.securityModules"));
 
     [
-      { titleKey: "module.shield", copyKey: "notice.shield", tagClass: "tag-safe" },
-      { titleKey: "module.guardian", copyKey: "notice.guardian", tagClass: "tag-safe" },
-      { titleKey: "module.vault", copyKey: "security.noUserFiles", tagClass: "tag-warn" },
-      { titleKey: "module.secureDelete", copyKey: "notice.secureDelete", tagClass: "tag-warn" },
-      { titleKey: "module.aiStudio", copyKey: "notice.aiStudio", tagClass: "tag" },
-      { titleKey: "module.privateWorkspace", copyKey: "notice.rollback", tagClass: "tag" }
+      { titleKey: "module.shield", copyKey: "notice.shield", tagClass: "tag-safe", stateClass: "safe" },
+      { titleKey: "module.guardian", copyKey: "notice.guardian", tagClass: "tag-safe", stateClass: "safe" },
+      { titleKey: "module.vault", copyKey: "security.noUserFiles", tagClass: "tag-warn", stateClass: "warn" },
+      { titleKey: "module.secureDelete", copyKey: "notice.secureDelete", tagClass: "tag-warn", stateClass: "warn" },
+      { titleKey: "module.aiStudio", copyKey: "notice.aiStudio", tagClass: "tag-info", stateClass: "info" },
+      { titleKey: "module.privateWorkspace", copyKey: "notice.rollback", tagClass: "tag-info", stateClass: "info" }
     ].forEach(function appendSecurityModule(moduleItem) {
-      const panel = createPanel(getString(moduleItem.titleKey), getString(moduleItem.copyKey));
+      const panel = createPanel(getString(moduleItem.titleKey), getString(moduleItem.copyKey), "security-module " + moduleItem.stateClass);
       const tagRow = createElement("div", "tag-row");
       tagRow.appendChild(createTag(getString("status.mockOnly"), moduleItem.tagClass));
       tagRow.appendChild(createTag(getString("status.previewOnly"), "tag-danger"));
       panel.appendChild(tagRow);
+      const signalRow = createElement("div", "module-signal-row");
+      signalRow.appendChild(createModuleSignal("status.localOnly", "status.noStorage"));
+      signalRow.appendChild(createModuleSignal("status.reducedMotionAware", "status.mockOnly"));
+      panel.appendChild(signalRow);
       panel.appendChild(createDisabledAction(getString("action.disabled")));
       grid.appendChild(panel);
     });
 
     screen.appendChild(grid);
     return screen;
+  }
+
+  function createModuleSignal(titleKey, bodyKey) {
+    const signal = createElement("span", "module-signal");
+    signal.appendChild(createElement("strong", "", getString(titleKey)));
+    signal.appendChild(createElement("span", "", getString(bodyKey)));
+    return signal;
   }
 
   function renderScreenForRoute(route) {
@@ -436,16 +507,39 @@
       button.classList.toggle("is-active", route === appState.route);
       if (button.classList.contains("route-button")) {
         button.setAttribute("aria-current", route === appState.route ? "page" : "false");
+        button.setAttribute("aria-label", getString(getRouteTitleKey(route)));
       }
     });
+  }
+
+  function getRouteTitleKey(route) {
+    const mockData = getMockData();
+    const routeDefinition = mockData.routes.find(function findRoute(routeItem) {
+      return routeItem.path === route;
+    });
+    return routeDefinition ? routeDefinition.titleKey : "app.name";
   }
 
   function updateLanguageButtons() {
     document.querySelectorAll("[data-locale]").forEach(function updateButton(button) {
       const locale = button.getAttribute("data-locale");
       button.classList.toggle("is-active", locale === appState.locale);
+      button.setAttribute("aria-pressed", locale === appState.locale ? "true" : "false");
     });
     document.documentElement.lang = appState.locale === "en" ? "en" : "ko";
+  }
+
+  function updateGlobalLowResourceButton() {
+    const button = getElementById("low-resource-toggle");
+    if (!button) {
+      return;
+    }
+
+    const isActive = Boolean(appState.quickSettings.lowResourceMode);
+    const labelKey = isActive ? "status.lowResourceOn" : "status.lowResourceOff";
+    button.textContent = getString(labelKey);
+    button.setAttribute("aria-label", getString("action.toggleLowResource"));
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
   }
 
   function updateTopBar() {
@@ -463,7 +557,7 @@
     }
   }
 
-  function renderApp() {
+  function renderApp(options) {
     const appRoot = getElementById("app");
     const screenRoot = getElementById("screen-root");
     if (!appRoot || !screenRoot) {
@@ -476,7 +570,15 @@
     updateTopBar();
     updateRouteButtons();
     updateLanguageButtons();
+    updateGlobalLowResourceButton();
     screenRoot.replaceChildren(renderScreenForRoute(appState.route));
+    if (options && options.focusScreen) {
+      try {
+        screenRoot.focus({ preventScroll: true });
+      } catch (error) {
+        screenRoot.focus();
+      }
+    }
   }
 
   function navigateTo(route) {
@@ -485,7 +587,7 @@
     if (window.location.hash !== "#" + nextRoute) {
       window.location.hash = nextRoute;
     } else {
-      renderApp();
+      renderApp({ focusScreen: true });
     }
   }
 
@@ -495,6 +597,7 @@
       return;
     }
     const toast = createElement("div", "toast", getString(messageKey));
+    toast.setAttribute("role", "status");
     toastRoot.replaceChildren(toast);
     window.setTimeout(function removeToast() {
       if (toast.parentNode === toastRoot) {
@@ -537,9 +640,40 @@
       handleToggleSetting(actionButton);
     } else if (action === "dismiss-notification") {
       handleDismissNotification(actionButton);
+    } else if (action === "dismiss-all-notifications") {
+      handleDismissAllNotifications();
     } else if (action === "switch-workspace") {
       handleSwitchWorkspace(actionButton);
     }
+  }
+
+  function handleRouteListKeydown(event) {
+    const key = event.key;
+    if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(key)) {
+      return;
+    }
+
+    const routeButtons = Array.from(document.querySelectorAll(".route-button"));
+    if (routeButtons.length === 0) {
+      return;
+    }
+
+    const activeIndex = routeButtons.indexOf(document.activeElement);
+    const currentIndex = activeIndex >= 0 ? activeIndex : 0;
+    let nextIndex = currentIndex;
+
+    if (key === "ArrowDown" || key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % routeButtons.length;
+    } else if (key === "ArrowUp" || key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + routeButtons.length) % routeButtons.length;
+    } else if (key === "Home") {
+      nextIndex = 0;
+    } else if (key === "End") {
+      nextIndex = routeButtons.length - 1;
+    }
+
+    event.preventDefault();
+    routeButtons[nextIndex].focus();
   }
 
   function handleToggleSetting(actionButton) {
@@ -548,13 +682,17 @@
       return;
     }
 
+    let toastKey = "toast.mockToggle";
     if (settingKey === "performanceMode") {
       appState.quickSettings.performanceMode = "balancedPremium";
     } else {
       appState.quickSettings[settingKey] = !Boolean(appState.quickSettings[settingKey]);
+      if (settingKey === "lowResourceMode") {
+        toastKey = appState.quickSettings.lowResourceMode ? "toast.lowResourceOn" : "toast.lowResourceOff";
+      }
     }
     renderApp();
-    showToast("toast.mockToggle");
+    showToast(toastKey);
   }
 
   function handleDismissNotification(actionButton) {
@@ -565,6 +703,15 @@
     appState.dismissedNotificationIds.add(notificationId);
     renderApp();
     showToast("toast.mockDismiss");
+  }
+
+  function handleDismissAllNotifications() {
+    const mockData = getMockData();
+    mockData.notifications.forEach(function dismissNotification(notification) {
+      appState.dismissedNotificationIds.add(notification.id);
+    });
+    renderApp();
+    showToast("toast.mockDismissAll");
   }
 
   function handleSwitchWorkspace(actionButton) {
@@ -586,9 +733,13 @@
       appState.quickSettings.performanceMode = "balancedPremium";
 
       document.addEventListener("click", handleDocumentClick);
+      const routeList = getElementById("route-list");
+      if (routeList) {
+        routeList.addEventListener("keydown", handleRouteListKeydown);
+      }
       window.addEventListener("hashchange", function handleHashChange() {
         appState.route = getRouteFromHash();
-        renderApp();
+        renderApp({ focusScreen: true });
       });
       renderApp();
     } catch (error) {

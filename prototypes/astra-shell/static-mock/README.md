@@ -1,6 +1,6 @@
 # Astra Shell Static WebView Mock Scaffold
 
-> 현재 문서는 Phase 1-3 기준이며 실제 구현이 아니라 정적 UI mock scaffold입니다. 실제 OS 제어, native bridge, OS command API, 실제 로그인, 권한 상승, 보안 정책 변경, 백신 실행, Vault 실행, Secure Delete 실행, AI WebUI 실행을 포함하지 않습니다.
+> 현재 문서는 Phase 1-4 UI Polish + Accessibility Pass 기준이며 실제 구현이 아니라 정적 UI mock scaffold입니다. 실제 OS 제어, native bridge, OS command API, 실제 로그인, 권한 상승, 보안 정책 변경, 백신 실행, Vault 실행, Secure Delete 실행, AI WebUI 실행을 포함하지 않습니다.
 
 ## 목적
 
@@ -52,6 +52,18 @@ prototypes/astra-shell/static-mock/
 | `#/settings` | Settings Mock | 실제 설정 변경 없는 구조 preview |
 | `#/security-center` | Security Center Mock | 백신/EDR/복구 구조의 defensive mock 표시 |
 
+## Phase 1-4 UI Polish 범위
+
+- Premium / Future / Calm / Fast / Trustworthy 방향을 강화한 dark glass panel 정리
+- active route 표시, keyboard focus 표시, skip link, route keyboard navigation 개선
+- Dock, Launcher, Control Center, Notification Center, Security Center mock의 visual hierarchy 개선
+- low resource mode mock toggle 추가
+- `prefers-reduced-motion` 대응 유지
+- mobile/tablet/desktop 반응형 개선
+- KO/EN string key 구조 유지
+
+Phase 1-4도 static mock 범위입니다. 실제 OS 기능, 실제 시스템 상태, 실제 보안 상태, 실제 로그인, 실제 설정 변경은 수행하지 않습니다.
+
 ## Mock Data 구조
 
 `scripts/mock-data.js`는 `window.ASTRA_SHELL_MOCK` 전역 object만 정의합니다.
@@ -75,7 +87,28 @@ prototypes/astra-shell/static-mock/
 - `index.html`은 로컬 CSS/JS만 참조합니다.
 - CDN, analytics, tracker, remote font, remote image를 사용하지 않습니다.
 - CSP는 `connect-src 'none'`로 네트워크 연결을 차단합니다.
+- `script-src 'self'`와 `style-src 'self'`를 유지합니다.
+- `localStorage`, `sessionStorage`, cookie, IndexedDB를 사용하지 않습니다.
 - asset은 `assets/` 하위의 로컬 정적 파일만 허용합니다.
+
+## 검증 방법
+
+다음 명령은 외부 패키지 설치 없이 실행할 수 있는 Phase 1-4 검증 기준입니다.
+
+```powershell
+node --check .\prototypes\astra-shell\static-mock\scripts\mock-data.js
+node --check .\prototypes\astra-shell\static-mock\scripts\app.js
+git diff --check
+rg -n 'fetch\(|XMLHttpRequest|WebSocket|EventSource|http://|https://|localStorage|sessionStorage|cookie|indexedDB|innerHTML|eval\(|new Function|document\.write' .\prototypes\astra-shell\static-mock
+```
+
+Edge headless가 설치된 환경에서는 주요 route 렌더링도 확인할 수 있습니다.
+
+```powershell
+$edge='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+$url='file:///C:/Users/scarl/Documents/OS/prototypes/astra-shell/static-mock/index.html#/security-center'
+& $edge --headless=new --disable-gpu --no-first-run --disable-background-networking --dump-dom $url
+```
 
 ## 아직 구현하지 않은 항목
 
