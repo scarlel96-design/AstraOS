@@ -1,6 +1,6 @@
 # Astra Shell Static WebView Mock Scaffold
 
-> 현재 문서는 Phase 1-4 UI Polish + Accessibility Pass 기준이며 실제 구현이 아니라 정적 UI mock scaffold입니다. 실제 OS 제어, native bridge, OS command API, 실제 로그인, 권한 상승, 보안 정책 변경, 백신 실행, Vault 실행, Secure Delete 실행, AI WebUI 실행을 포함하지 않습니다.
+> 현재 문서는 Phase 1-5 OS-like Layout Direction Pass 기준이며 실제 구현이 아니라 정적 UI mock scaffold입니다. 실제 OS 제어, native bridge, OS command API, 실제 로그인, 권한 상승, 보안 정책 변경, 백신 실행, Vault 실행, Secure Delete 실행, AI WebUI 실행을 포함하지 않습니다.
 
 ## 목적
 
@@ -52,17 +52,22 @@ prototypes/astra-shell/static-mock/
 | `#/settings` | Settings Mock | 실제 설정 변경 없는 구조 preview |
 | `#/security-center` | Security Center Mock | 백신/EDR/복구 구조의 defensive mock 표시 |
 
-## Phase 1-4 UI Polish 범위
+## Phase 1-5 OS-like Layout Direction 범위
 
-- Premium / Future / Calm / Fast / Trustworthy 방향을 강화한 dark glass panel 정리
-- active route 표시, keyboard focus 표시, skip link, route keyboard navigation 개선
-- Dock, Launcher, Control Center, Notification Center, Security Center mock의 visual hierarchy 개선
+- 왼쪽 고정 웹앱 사이드바 중심 구조를 줄이고 상단 compact route switcher로 축소
+- wallpaper, desktop icon, depth layer가 있는 데스크톱 중심 scene 구성
+- Dock을 하단 floating Dock으로 배치
+- Launcher를 데스크톱 위 overlay/panel로 표현
+- Control Center와 Notification Center를 오른쪽 side panel로 표현
+- Settings mock과 Security Center mock을 데스크톱 위 app window로 표현
+- Workspace View를 전체 화면 overview overlay로 표현
+- Premium / Future / Calm / Fast / Trustworthy 방향을 유지한 dark glass panel 정리
 - low resource mode mock toggle 추가
 - `prefers-reduced-motion` 대응 유지
 - mobile/tablet/desktop 반응형 개선
 - KO/EN string key 구조 유지
 
-Phase 1-4도 static mock 범위입니다. 실제 OS 기능, 실제 시스템 상태, 실제 보안 상태, 실제 로그인, 실제 설정 변경은 수행하지 않습니다.
+Phase 1-5도 static mock 범위입니다. 실제 OS 기능, 실제 시스템 상태, 실제 보안 상태, 실제 로그인, 실제 설정 변경은 수행하지 않습니다.
 
 ## Mock Data 구조
 
@@ -93,7 +98,7 @@ Phase 1-4도 static mock 범위입니다. 실제 OS 기능, 실제 시스템 상
 
 ## 검증 방법
 
-다음 명령은 외부 패키지 설치 없이 실행할 수 있는 Phase 1-4 검증 기준입니다.
+다음 명령은 외부 패키지 설치 없이 실행할 수 있는 Phase 1-5 검증 기준입니다.
 
 ```powershell
 node --check .\prototypes\astra-shell\static-mock\scripts\mock-data.js

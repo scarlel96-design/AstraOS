@@ -128,7 +128,7 @@
   }
 
   function createScreenShell(titleKey, descriptionKey) {
-    const screen = createElement("div", "screen");
+    const screen = createElement("div", "screen legacy-screen");
     const hero = createElement("section", "screen-hero");
     const titleId = "screen-title-" + titleKey.replace(/[^a-zA-Z0-9]+/g, "-");
     hero.setAttribute("aria-labelledby", titleId);
@@ -147,6 +147,284 @@
 
     screen.appendChild(hero);
     return screen;
+  }
+
+  function createShellScene(route) {
+    const scene = createElement("div", "os-scene");
+    scene.setAttribute("aria-label", getString("section.desktopSurface"));
+
+    const wallpaper = createElement("div", "wallpaper-surface");
+    wallpaper.appendChild(createElement("span", "wallpaper-grid"));
+    wallpaper.appendChild(createElement("span", "wallpaper-depth depth-one"));
+    wallpaper.appendChild(createElement("span", "wallpaper-depth depth-two"));
+    scene.appendChild(wallpaper);
+
+    scene.appendChild(createDesktopStatusBar(route));
+    scene.appendChild(createDesktopIcons());
+    scene.appendChild(createRouteSurface(route));
+    scene.appendChild(createDockPreview());
+
+    return scene;
+  }
+
+  function createDesktopStatusBar(route) {
+    const bar = createElement("section", "desktop-status-bar");
+    bar.setAttribute("aria-label", getString("section.systemSignals"));
+
+    const left = createElement("div", "desktop-status-left");
+    left.appendChild(createElement("strong", "", getString("app.name")));
+    left.appendChild(createTag(getString(getRouteTitleKey(route)), "tag-info"));
+    left.appendChild(createTag(getString("status.mockOnly"), "tag"));
+
+    const right = createElement("div", "desktop-status-right");
+    right.appendChild(createTag(getString("status.localOnly"), "tag-safe"));
+    right.appendChild(createTag(getString("status.noStorage"), "tag-info"));
+    right.appendChild(createElement("span", "status-clock", getMockData().systemStatus.timeLabel));
+
+    bar.appendChild(left);
+    bar.appendChild(right);
+    return bar;
+  }
+
+  function createDesktopIcons() {
+    const iconGrid = createElement("section", "desktop-icon-grid");
+    iconGrid.setAttribute("aria-label", getString("section.shellPanels"));
+    [
+      { labelKey: "route.launcher.title", route: "/launcher" },
+      { labelKey: "route.settings.title", route: "/settings" },
+      { labelKey: "route.securityCenter.title", route: "/security-center" },
+      { labelKey: "route.workspaces.title", route: "/workspaces" }
+    ].forEach(function appendDesktopIcon(icon) {
+      const label = getString(icon.labelKey);
+      const button = createElement("button", "desktop-icon", "");
+      button.type = "button";
+      button.dataset.route = icon.route;
+      button.setAttribute("aria-label", label);
+      button.appendChild(createElement("span", "desktop-icon-glyph", getAppInitial(label)));
+      button.appendChild(createElement("span", "desktop-icon-label", label));
+      iconGrid.appendChild(button);
+    });
+    return iconGrid;
+  }
+
+  function createRouteSurface(route) {
+    if (route === "/login") {
+      return createLoginOverlay();
+    }
+    if (route === "/launcher") {
+      return createLauncherOverlay();
+    }
+    if (route === "/control-center") {
+      return createControlCenterPanel();
+    }
+    if (route === "/notifications") {
+      return createNotificationPanel();
+    }
+    if (route === "/workspaces") {
+      return createWorkspaceOverview();
+    }
+    if (route === "/settings") {
+      return createSettingsWindow();
+    }
+    if (route === "/security-center") {
+      return createSecurityCenterWindow();
+    }
+    if (route === "/dock") {
+      return createDockFocusHint();
+    }
+    return createDesktopWindows();
+  }
+
+  function createWindowFrame(title, copy, extraClass) {
+    const frame = createElement("section", extraClass ? "shell-window " + extraClass : "shell-window");
+    frame.setAttribute("aria-label", title);
+    const chrome = createElement("div", "window-chrome");
+    chrome.appendChild(createElement("span", "window-dot dot-safe"));
+    chrome.appendChild(createElement("span", "window-dot dot-warn"));
+    chrome.appendChild(createElement("span", "window-dot dot-blocked"));
+    chrome.appendChild(createElement("strong", "window-title", title));
+    frame.appendChild(chrome);
+    if (copy) {
+      frame.appendChild(createElement("p", "window-copy", copy));
+    }
+    return frame;
+  }
+
+  function createLoginOverlay() {
+    const overlay = createWindowFrame(getString("login.title"), getString("login.description"), "login-overlay");
+    overlay.appendChild(createTag(getString("security.noRealLogin"), "tag-danger"));
+    const input = createElement("input", "mock-input");
+    input.type = "password";
+    input.disabled = true;
+    input.placeholder = getString("login.passwordPlaceholder");
+    input.setAttribute("aria-label", getString("login.passwordPlaceholder"));
+    overlay.appendChild(input);
+    const actionRow = createElement("div", "action-row");
+    actionRow.appendChild(createActionButton(getString("action.mockLogin"), "/desktop", "primary"));
+    actionRow.appendChild(createDisabledAction(getString("action.disabled")));
+    overlay.appendChild(actionRow);
+    return overlay;
+  }
+
+  function createDesktopWindows() {
+    const layer = createElement("section", "desktop-window-layer");
+    layer.setAttribute("aria-label", getString("section.appWindow"));
+    layer.appendChild(createSettingsWindow());
+    layer.appendChild(createSecurityCenterWindow());
+    return layer;
+  }
+
+  function createLauncherOverlay() {
+    const mockData = getMockData();
+    const overlay = createWindowFrame(getString("route.launcher.title"), getString("launcher.description"), "launcher-overlay");
+    const grid = createElement("section", "launcher-app-grid");
+    grid.setAttribute("aria-label", getString("section.pinnedApps"));
+    mockData.pinnedApps.forEach(function appendLauncherTile(app) {
+      const label = getString(app.labelKey);
+      const tile = createElement("button", "launcher-tile", "");
+      tile.type = "button";
+      tile.dataset.route = app.opensRoute;
+      tile.setAttribute("aria-label", label);
+      tile.appendChild(createElement("span", "app-initial", getAppInitial(label)));
+      tile.appendChild(createElement("strong", "", label));
+      tile.appendChild(createElement("span", "", getString("status.mockOnly")));
+      grid.appendChild(tile);
+    });
+    overlay.appendChild(grid);
+    return overlay;
+  }
+
+  function createControlCenterPanel() {
+    const mockData = getMockData();
+    const panel = createWindowFrame(getString("route.controlCenter.title"), getString("controlCenter.description"), "side-panel control-panel");
+    const toggleGrid = createElement("div", "toggle-grid");
+    toggleGrid.appendChild(createToggleButton("status.localOnly", true, true));
+    toggleGrid.appendChild(createToggleButton("control.focusMode", appState.quickSettings.focusMode, false, "focusMode"));
+    toggleGrid.appendChild(createToggleButton("status.lowResource", appState.quickSettings.lowResourceMode, false, "lowResourceMode"));
+    toggleGrid.appendChild(createToggleButton("status.balancedPremium", appState.quickSettings.performanceMode === "balancedPremium", false, "performanceMode"));
+    panel.appendChild(toggleGrid);
+    panel.appendChild(createRangeRow("control.brightness", mockData.quickSettings.brightness));
+    panel.appendChild(createRangeRow("control.volume", mockData.quickSettings.volume));
+    return panel;
+  }
+
+  function createNotificationPanel() {
+    const mockData = getMockData();
+    const panel = createWindowFrame(getString("route.notifications.title"), getString("notifications.description"), "side-panel notification-panel");
+    const visibleNotifications = mockData.notifications.filter(function keepVisibleNotification(notification) {
+      return !appState.dismissedNotificationIds.has(notification.id);
+    });
+    if (visibleNotifications.length === 0) {
+      panel.appendChild(createElement("div", "empty-state", getString("empty.notifications")));
+      return panel;
+    }
+    const actionRow = createElement("div", "action-row");
+    const dismissAll = createElement("button", "action-button", getString("action.dismissAllNotifications"));
+    dismissAll.type = "button";
+    dismissAll.dataset.action = "dismiss-all-notifications";
+    actionRow.appendChild(dismissAll);
+    panel.appendChild(actionRow);
+    panel.appendChild(createNotificationList(visibleNotifications));
+    return panel;
+  }
+
+  function createNotificationList(notifications) {
+    const list = createElement("ul", "notification-list");
+    notifications.forEach(function appendNotification(notification) {
+      const severity = safeText(notification.severity, "info");
+      const item = createElement("li", "notification-item severity-" + severity);
+      item.appendChild(createElement("span", "notification-severity"));
+      const content = createElement("div", "notification-content");
+      const meta = createElement("div", "notification-meta");
+      meta.appendChild(createTag(getString(notification.sourceKey), severity === "warn" ? "tag-warn" : "tag-info"));
+      meta.appendChild(createTag(getString("status.previewOnly"), "tag-danger"));
+      content.appendChild(meta);
+      content.appendChild(createElement("p", "list-title", getString(notification.titleKey)));
+      content.appendChild(createElement("p", "list-copy", getString(notification.bodyKey)));
+      const dismiss = createElement("button", "action-button", getString("action.dismissNotification"));
+      dismiss.type = "button";
+      dismiss.dataset.action = "dismiss-notification";
+      dismiss.dataset.notificationId = notification.id;
+      content.appendChild(dismiss);
+      item.appendChild(content);
+      list.appendChild(item);
+    });
+    return list;
+  }
+
+  function createWorkspaceOverview() {
+    const mockData = getMockData();
+    const overview = createElement("section", "workspace-overview");
+    overview.setAttribute("aria-label", getString("route.workspaces.title"));
+    overview.appendChild(createElement("h2", "overlay-title", getString("route.workspaces.title")));
+    const grid = createElement("div", "workspace-grid");
+    mockData.workspaces.forEach(function appendWorkspace(workspace) {
+      const isActive = appState.activeWorkspaceId === workspace.id;
+      const card = createElement("button", isActive ? "workspace-card is-active" : "workspace-card");
+      card.type = "button";
+      card.dataset.action = "switch-workspace";
+      card.dataset.workspaceId = workspace.id;
+      card.setAttribute("aria-pressed", isActive ? "true" : "false");
+      card.setAttribute("aria-label", getString(workspace.labelKey));
+      card.appendChild(createElement("strong", "", getString(workspace.labelKey)));
+      card.appendChild(createElement("span", "", formatWindowCount(workspace.windowCount)));
+      const preview = createElement("span", "workspace-preview");
+      preview.appendChild(createElement("span", ""));
+      preview.appendChild(createElement("span", ""));
+      card.appendChild(preview);
+      grid.appendChild(card);
+    });
+    overview.appendChild(grid);
+    return overview;
+  }
+
+  function createSettingsWindow() {
+    const frame = createWindowFrame(getString("route.settings.title"), getString("settings.description"), "app-window settings-window");
+    const grid = createElement("div", "settings-grid");
+    [
+      getString("status.localOnly"),
+      getString("status.balancedPremium"),
+      getString("module.aiStudio"),
+      getString("module.privateWorkspace")
+    ].forEach(function appendSetting(title) {
+      const row = createElement("div", "settings-row");
+      row.appendChild(createElement("strong", "", title));
+      row.appendChild(createTag(getString("status.previewOnly"), "tag-danger"));
+      grid.appendChild(row);
+    });
+    frame.appendChild(grid);
+    frame.appendChild(createDisabledAction(getString("action.disabled")));
+    return frame;
+  }
+
+  function createSecurityCenterWindow() {
+    const frame = createWindowFrame(getString("route.securityCenter.title"), getString("securityCenter.description"), "app-window security-window");
+    const grid = createElement("div", "security-module-grid");
+    [
+      { titleKey: "module.shield", copyKey: "notice.shield", tagClass: "tag-safe", stateClass: "safe" },
+      { titleKey: "module.guardian", copyKey: "notice.guardian", tagClass: "tag-safe", stateClass: "safe" },
+      { titleKey: "module.vault", copyKey: "security.noUserFiles", tagClass: "tag-warn", stateClass: "warn" },
+      { titleKey: "module.secureDelete", copyKey: "notice.secureDelete", tagClass: "tag-warn", stateClass: "warn" },
+      { titleKey: "module.aiStudio", copyKey: "notice.aiStudio", tagClass: "tag-info", stateClass: "info" },
+      { titleKey: "module.privateWorkspace", copyKey: "notice.rollback", tagClass: "tag-info", stateClass: "info" }
+    ].forEach(function appendSecurityModule(moduleItem) {
+      const moduleCard = createElement("article", "security-module " + moduleItem.stateClass);
+      moduleCard.appendChild(createElement("h3", "panel-title", getString(moduleItem.titleKey)));
+      moduleCard.appendChild(createElement("p", "panel-copy", getString(moduleItem.copyKey)));
+      const tagRow = createElement("div", "tag-row");
+      tagRow.appendChild(createTag(getString("status.mockOnly"), moduleItem.tagClass));
+      tagRow.appendChild(createTag(getString("status.previewOnly"), "tag-danger"));
+      moduleCard.appendChild(tagRow);
+      grid.appendChild(moduleCard);
+    });
+    frame.appendChild(grid);
+    return frame;
+  }
+
+  function createDockFocusHint() {
+    const hint = createWindowFrame(getString("route.dock.title"), getString("dock.description"), "dock-focus-panel");
+    hint.appendChild(createTag(getString("security.noOsCommand"), "tag-danger"));
+    return hint;
   }
 
   function getVisibleNotificationCount() {
@@ -460,28 +738,7 @@
   }
 
   function renderScreenForRoute(route) {
-    switch (route) {
-      case "/login":
-        return renderLoginScreen();
-      case "/desktop":
-        return renderDesktopScreen();
-      case "/dock":
-        return renderDockScreen();
-      case "/launcher":
-        return renderLauncherScreen();
-      case "/control-center":
-        return renderControlCenterScreen();
-      case "/notifications":
-        return renderNotificationsScreen();
-      case "/workspaces":
-        return renderWorkspaceScreen();
-      case "/settings":
-        return renderSettingsScreen();
-      case "/security-center":
-        return renderSecurityCenterScreen();
-      default:
-        return renderLoginScreen();
-    }
+    return createShellScene(normalizeRoute(route));
   }
 
   function formatWindowCount(windowCount) {
