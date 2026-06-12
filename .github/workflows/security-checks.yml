@@ -1,0 +1,75 @@
+name: AstraOS Phase 0 Security Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  phase0-documentation-boundaries:
+    name: Phase 0 documentation boundaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify required Phase 0 artifacts exist
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_files=(
+            "AGENTS.md"
+            "README.md"
+            "ARCHITECTURE.md"
+            "SECURITY_MODEL.md"
+            "THREAT_MODEL.md"
+            "ROADMAP.md"
+            "MVP_SCOPE.md"
+            "CODING_STANDARDS.md"
+            "RISK_REGISTER.md"
+            "LICENSES.md"
+            "docs/README.md"
+            "docs/decisions/0001-project-scope.md"
+            "docs/security/secure-development.md"
+            "docs/shield/overview.md"
+            "docs/shield-guardian/overview.md"
+            "docs/vault/overview.md"
+            "docs/secure-delete/overview.md"
+            "docs/private-workspace/overview.md"
+            "docs/ai-studio/overview.md"
+            "docs/core-apps/overview.md"
+            "docs/module-framework/overview.md"
+          )
+
+          missing=0
+          for file_path in "${required_files[@]}"; do
+            if [[ ! -f "$file_path" ]]; then
+              echo "::error file=$file_path::Missing required Phase 0 artifact"
+              missing=1
+            fi
+          done
+
+          exit "$missing"
+
+      - name: Verify defensive security boundary terms
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          grep -R "Secure Delete는 anti-forensics가 아니라 사용자 소유 데이터 보호" README.md ARCHITECTURE.md SECURITY_MODEL.md THREAT_MODEL.md MVP_SCOPE.md ROADMAP.md RISK_REGISTER.md CODING_STANDARDS.md docs
+          grep -R "Astra Shield는 공격 기능이 아니라 백신/EDR/복구 구조" README.md ARCHITECTURE.md SECURITY_MODEL.md THREAT_MODEL.md MVP_SCOPE.md ROADMAP.md RISK_REGISTER.md CODING_STANDARDS.md docs
+          grep -R "AI Studio는 WebUI 외부 공개가 아니라 sandbox/localhost 기본값" README.md ARCHITECTURE.md SECURITY_MODEL.md THREAT_MODEL.md MVP_SCOPE.md ROADMAP.md RISK_REGISTER.md CODING_STANDARDS.md docs
+
+      - name: Verify Phase 0 non-implementation boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          grep -R "현재 문서는 Phase 0 기준이며 실제 구현이 아니라 설계/범위/거버넌스 문서" README.md ARCHITECTURE.md SECURITY_MODEL.md THREAT_MODEL.md MVP_SCOPE.md ROADMAP.md RISK_REGISTER.md CODING_STANDARDS.md LICENSES.md docs
+          grep -R "커널 직접 제작" AGENTS.md README.md MVP_SCOPE.md docs/decisions/0001-project-scope.md
+          grep -R "실제 백신" AGENTS.md README.md MVP_SCOPE.md ROADMAP.md docs/decisions/0001-project-scope.md
+          grep -R "AI WebUI 실행 구현" docs/decisions/0001-project-scope.md docs/ai-studio/overview.md
