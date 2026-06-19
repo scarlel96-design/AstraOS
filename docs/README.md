@@ -20,6 +20,7 @@
 | `module-framework/overview.md` | 모듈 manifest, 권한, sandbox, rollback 계약 |
 | `base/linux-base-comparison.md` | Phase 1-6 Linux base 후보 weighted selection matrix |
 | `base/recommended-base-shortlist.md` | Phase 1-6 Linux base 1차 shortlist와 Phase 1-7 PoC 목록 |
+| `design/astra-design-language.md` | Astra Design Language와 UI 복제 방지 원칙 |
 | `compatibility/compatibility-layer-architecture.md` | Windows/macOS compatibility layer 상위 구조 |
 | `compatibility/windows-app-compatibility.md` | Windows 앱 호환성 준비 트랙 |
 | `compatibility/macos-app-compatibility.md` | macOS 앱 호환성 Experimental 트랙 |
@@ -30,6 +31,7 @@
 | `shell/security-boundaries.md` | Astra Shell mock 보안 경계 |
 | `decisions/0002-astra-shell-prototype-scope.md` | Astra Shell prototype 범위 결정 |
 | `decisions/0003-linux-base-architecture.md` | Linux base architecture 방향 결정 |
+| `decisions/0005-astra-design-language.md` | Astra Design Language 결정 |
 | `decisions/0006-compatibility-strategy.md` | Windows/macOS compatibility 전략 결정 |
 | `decisions/0007-linux-base-selection-criteria.md` | Linux base 후보 선택 기준 |
 | `decisions/0008-linux-base-shortlist.md` | Phase 1-6 Linux base 1차 shortlist 결정 |

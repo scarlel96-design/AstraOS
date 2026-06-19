@@ -103,6 +103,28 @@ Phase 1-5e 기준으로 실제 구현 전 다음 항목을 문서화합니다.
 | Wayland | Wayland session, XWayland compatibility, compositor integration 후보 |
 | XDG portal | file, clipboard, camera, microphone, screen capture permission broker 연결 |
 
+## Phase 1-5d: Astra Shell and Design Language Lock
+
+Astra Shell은 Linux 위에서 동작하는 독립 Shell 계층입니다. Linux 기반은 kernel, driver, system service, package/update, Wayland, XDG 표준을 제공하고, 사용자가 보는 desktop experience는 Astra Shell이 담당합니다.
+
+장기 Shell 방향:
+
+- Wayland 기반 session/shell/compositor integration 검토
+- XDG desktop entry와 app launcher integration
+- XDG portal 기반 파일, 카메라, 마이크, clipboard, screen capture 권한 중재
+- accessibility, keyboard navigation, input method, localization 지원
+- Linux native 앱이 AstraOS window chrome/theme bridge 안에서 자연스럽게 보이는 방향
+- Astra Shell UI는 GNOME/KDE/Ubuntu UI를 복제하지 않고 Astra Design Language를 따름
+
+Astra Design Language는 macOS의 정갈함과 고급스러운 desktop 미학, One UI 9.0의 부드럽고 직관적인 component 감성을 AstraOS 맥락에 맞게 통합한 고유 디자인 언어입니다.
+
+복제 금지 원칙:
+
+- macOS Dock, traffic light 버튼, 메뉴바, Apple 로고를 그대로 복제하지 않습니다.
+- Samsung One UI의 특정 아이콘, 컬러 팔레트, component 모양을 그대로 복제하지 않습니다.
+- GNOME, KDE, Windows 기본 UI를 그대로 따르지 않습니다.
+- 보안 OS라는 이유로 cyber security dashboard, 과한 neon, 과도한 badge와 경고색을 남발하지 않습니다.
+
 ## Modular Evolution Architecture
 
 Modular Evolution Architecture는 AstraOS를 독립적으로 발전 가능한 모듈들의 집합으로 설계하는 원칙입니다. OS Core는 안정적인 기반을 제공하고, 기능 모듈은 명확한 계약을 통해 연결합니다.

@@ -8,13 +8,14 @@ Phase 1-0의 추천 기술은 WebView 기반 mock입니다. 단, 실제 OS shell
 
 장기 native shell 후보는 Qt/QML과 Slint를 계속 비교합니다. Rust UI는 보안-critical userland와 도구 UI에는 적합할 수 있지만, Phase 1-0의 polished shell mock에는 WebView가 더 빠릅니다.
 
-Phase 1-5c/1-5e 기준으로 이 결정의 경계를 다음과 같이 보강합니다.
+Phase 1-5c/1-5d/1-5e 기준으로 이 결정의 경계를 다음과 같이 보강합니다.
 
 - WebView 기반 static mock은 실제 AstraOS가 아닙니다.
 - WebView 기반 static mock은 최종 Astra Shell 기술 확정이 아닙니다.
 - AstraOS는 Linux LTS 기반 immutable/atomic desktop OS를 목표로 합니다.
 - Astra Shell의 장기 구현은 Linux/Wayland/XDG 표준 위에서 native shell prototype으로 재평가합니다.
 - 단순 Electron-only shell, Web app OS, Windows 앱 방향은 제외합니다.
+- UI visual language는 `docs/design/astra-design-language.md`를 따릅니다.
 
 ## 평가 기준
 
@@ -79,6 +80,7 @@ Phase 1-6 이후 추가 재평가 기준:
 
 - 선택한 Linux base의 Wayland/session integration 방식
 - XDG desktop entry, XDG portal, accessibility stack 지원 수준
+- Astra Design Language를 native UI token으로 구현할 수 있는지
 - Linux native app window chrome/theme bridge 구현 가능성
 - atomic update와 Shell rollback 정책 연동 가능성
 - Shell crash 시 desktop session 복구 전략

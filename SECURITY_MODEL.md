@@ -70,6 +70,17 @@ Astra Shell은 Linux 위에서 동작하는 독립 Shell 계층이며, 사용자
 - Shell UI는 system setting 변경, 보안 정책 변경, package install, Secure Delete, Vault unlock 같은 위험 작업을 직접 실행하지 않고 사용자 확인, preview, dry-run, rollback 경계를 요구합니다.
 - Linux native app은 AstraOS window chrome/theme bridge 안에서 자연스럽게 보이도록 하되 앱 sandbox와 접근성 표준을 깨지 않습니다.
 
+## UI 복제 방지와 보안 UX
+
+Astra Design Language는 macOS의 정갈함과 One UI 9.0의 부드러운 component 감성을 AstraOS에 맞게 재해석합니다. 보안 UX는 신뢰감과 명확성을 우선하며 과장된 위험 표현을 피합니다.
+
+금지:
+
+- Apple/Samsung/Windows/GNOME/KDE의 특정 로고, 버튼 모양, icon style, menu/taskbar/dock 구조 직접 복제
+- 실제 보안 상태처럼 오해될 수 있는 static mock 표현
+- 과한 cyber dashboard, neon, badge, warning color 남발
+- 실제 OS 권한이 필요한 작업을 preview 없이 실행하는 흐름
+
 ## Compatibility Layer 보안 방향
 
 Compatibility layer는 Windows 앱 호환성과 macOS 앱 호환성 실험 트랙을 준비하지만, 공격 도구나 우회 도구가 아닙니다.

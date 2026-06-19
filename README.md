@@ -1,6 +1,6 @@
 # AstraOS
 
-> 현재 문서는 Phase 1-5c/1-5e 기준이며 실제 OS 구현이 아니라 Linux base architecture와 compatibility strategy를 고정하는 설계/범위/거버넌스 문서입니다. 이 문서는 ISO 빌드, 파티션 작업, 부팅로더 작업, Wayland compositor 구현, 드라이버 구현, 실제 보안 엔진 구현을 수행하지 않습니다.
+> 현재 문서는 Phase 1-5c/1-5d/1-5e 기준이며 실제 OS 구현이 아니라 Linux base architecture, compatibility strategy, Astra Design Language를 고정하는 설계/범위/거버넌스 문서입니다. 이 문서는 ISO 빌드, 파티션 작업, 부팅로더 작업, Wayland compositor 구현, 드라이버 구현, 실제 보안 엔진 구현을 수행하지 않습니다.
 
 ## Project Identity
 
@@ -51,11 +51,24 @@ macOS compatibility는 Experimental track입니다.
 
 현재 단계에서는 Wine, Proton, DXVK, VKD3D-Proton, Darling을 설치하거나 실행하지 않습니다.
 
+## Astra Design Language Lock
+
+Phase 1-5d 기준 AstraOS의 사용자 경험은 Linux 기본 desktop environment를 그대로 따르지 않습니다. Linux 기반은 커널, 드라이버, 시스템 서비스, 보안, 패키지, Wayland, XDG 표준을 의미하며, 사용자가 보는 Shell UI/UX는 Astra Shell이 담당합니다.
+
+Astra Design Language는 macOS의 정갈함과 고급스러운 desktop 미학, Samsung One UI 9.0의 부드럽고 직관적인 component 감성을 AstraOS 맥락에 맞게 재해석한 고유 디자인 언어입니다.
+
+복제 금지 원칙:
+
+- Apple 로고, macOS traffic light 버튼 색상/형태, macOS 메뉴바 구조를 복제하지 않습니다.
+- Samsung One UI의 특정 아이콘 스타일, 컬러 팔레트, 고유 component 형태를 복제하지 않습니다.
+- GNOME, KDE, Windows 기본 UI를 그대로 따르지 않습니다.
+- 사이버 보안 대시보드처럼 과한 badge, 경고색, 카드 grid를 남발하지 않습니다.
+
 ## Current Scope
 
 현재 작업 범위는 문서와 prototype 방향 고정입니다.
 
-- 허용: Linux base architecture 문서화, Shell/UI 계층 분리, compatibility strategy 문서화, ADR 추가, roadmap/MVP/security model 갱신
+- 허용: Linux base architecture 문서화, Shell/UI 계층 분리, compatibility strategy 문서화, design language 문서화, ADR 추가, roadmap/MVP/security model 갱신
 - 금지: 실제 OS 빌드, ISO 생성, 파티션 작업, 부팅로더 작업, Wayland compositor 구현, Wine/Proton/Darling 설치, 실제 보안 엔진 구현, commit/push 자동 수행
 
 ## Key Documents
@@ -63,11 +76,13 @@ macOS compatibility는 Experimental track입니다.
 - `ARCHITECTURE.md`: Linux base, immutable/atomic 방향, Astra Shell 계층
 - `SECURITY_MODEL.md`: 권한 모델, sandbox, update trust, 위험 작업 경계
 - `MVP_SCOPE.md`: MVP 포함/제외 범위
-- `ROADMAP.md`: Phase 1-5c/1-5e 이후 전환 로드맵
+- `ROADMAP.md`: Phase 1-5c/1-5d/1-5e 이후 전환 로드맵
 - `docs/shell/`: Astra Shell prototype과 향후 Linux shell 전환 방향
+- `docs/design/astra-design-language.md`: AstraOS 고유 디자인 언어
 - `docs/compatibility/compatibility-layer-architecture.md`: compatibility layer 상위 구조
 - `docs/compatibility/windows-app-compatibility.md`: Windows 앱 호환성 준비 트랙
 - `docs/compatibility/macos-app-compatibility.md`: macOS 앱 호환성 Experimental 트랙
 - `docs/decisions/0003-linux-base-architecture.md`: Linux base architecture ADR
+- `docs/decisions/0005-astra-design-language.md`: Design language ADR
 - `docs/decisions/0006-compatibility-strategy.md`: Windows/macOS compatibility 전략 ADR
 - `docs/decisions/0007-linux-base-selection-criteria.md`: Linux base 선택 기준 ADR

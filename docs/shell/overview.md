@@ -6,12 +6,13 @@
 
 Astra Shell은 AstraOS 사용자 경험의 첫 화면과 기본 조작 모델을 정의하는 데스크톱 shell 계층입니다. Phase 1-0에서 Astra Shell은 실제 OS shell이 아니라 화면 구성, 정보 구조, 모듈 경계, 보안 경계를 검증하기 위한 UI mock 대상입니다.
 
-Phase 1-5c/1-5e 기준으로 Astra Shell의 장기 위치를 다음과 같이 고정합니다.
+Phase 1-5c/1-5d/1-5e 기준으로 Astra Shell의 장기 위치를 다음과 같이 고정합니다.
 
 - AstraOS의 실제 OS base는 Linux LTS 기반 immutable/atomic desktop OS입니다.
 - Astra Shell은 Linux base 위에서 동작하는 독립 Shell 계층입니다.
 - 현재 static mock은 실제 Linux OS, WebView OS, Electron app, Windows app이 아니라 Shell UI prototype입니다.
 - 장기적으로 Wayland session/shell/compositor integration, XDG desktop entry, XDG portal, accessibility, keyboard navigation, theme token 구조를 고려합니다.
+- Astra Shell은 GNOME/KDE/Ubuntu UI를 그대로 따르지 않고 Astra Design Language를 따릅니다.
 
 ## 역할
 
@@ -27,6 +28,19 @@ Astra Shell의 장기 역할은 다음과 같습니다.
 - permission broker와 XDG portal을 통한 권한 요청/승인 UX 방향 정의
 - App Center와 Launcher에서 Linux native 앱, Windows compatibility 앱, macOS experimental 앱을 자연스럽게 구분하는 UX 방향 정의
 - compatibility profile의 repair/reset/uninstall 같은 위험 작업을 preview와 사용자 확인 중심으로 표현
+
+## Astra Design Language
+
+Astra Shell UI는 macOS의 정갈함과 고급스러운 glass/depth 감성, One UI 9.0의 부드러운 radius/card/quick panel 감성을 AstraOS 고유 방식으로 융합합니다.
+
+참고하되 복제하지 않습니다.
+
+- macOS Dock, traffic light 버튼, 메뉴바, Apple 로고 복제 금지
+- Samsung One UI의 특정 icon style, 컬러 팔레트, component 형태 복제 금지
+- GNOME, KDE, Windows 기본 UI 복제 금지
+- 과한 cyber security dashboard, neon, badge, warning color 남발 금지
+
+세부 원칙은 `docs/design/astra-design-language.md`와 `docs/decisions/0005-astra-design-language.md`에서 관리합니다.
 
 ## Phase 1-0 범위
 

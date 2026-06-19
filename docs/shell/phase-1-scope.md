@@ -99,6 +99,25 @@ Phase 1-5c는 Astra Shell 구현이 아니라 AstraOS의 실제 OS 방향을 Lin
 - driver 구현
 - package manager 구현
 
+## Phase 1-5d: AstraOS Visual Design Language Lock
+
+Phase 1-5d는 Astra Shell이 따를 고유 디자인 언어를 문서화하는 단계입니다.
+
+UI 방향:
+
+- Linux 기반이라고 GNOME/KDE/Ubuntu UI를 그대로 따르지 않습니다.
+- macOS의 정갈함, 여백, glass surface, typography 감성을 참고합니다.
+- One UI 9.0의 큰 radius, 부드러운 component, 명확한 section, quick panel 감성을 참고합니다.
+- Apple, Samsung, Windows, GNOME, KDE의 특정 시각 요소를 복제하지 않습니다.
+- AstraOS 고유의 calm, premium, soft, trustworthy desktop shell을 목표로 합니다.
+
+Linux UI 표준:
+
+- Wayland 기반 Shell 방향을 문서화합니다.
+- XDG desktop entry, XDG portal, accessibility, keyboard navigation, theme token 구조를 고려합니다.
+- Linux native app이 AstraOS Shell 안에서 자연스럽게 보이도록 window chrome/theme bridge 방향을 문서화합니다.
+- UI는 고유 디자인을 가지되 Linux 앱 호환성을 깨지 않습니다.
+
 ## Phase 1-5e: Real Linux Base + Compatibility Strategy
 
 Phase 1-5e는 실제 구현이 아니라 AstraOS가 장기적으로 실제 부팅 가능한 Linux 기반 OS가 되기 위한 base architecture와 compatibility strategy를 문서화하는 단계입니다.
