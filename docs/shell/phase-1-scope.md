@@ -77,6 +77,51 @@ Phase 1-2는 아직 실제 UI 앱 코드를 만들기 전, 정적 WebView mock s
 
 Phase 1-2에서는 package.json, HTML, CSS, TypeScript, JavaScript, WebView 실행 코드, native bridge, OS command API, 실제 로그인, 권한 상승, 시스템 설정 변경, 보안 정책 변경, 드라이버 제어, 백신 연동, Secure Delete 실행, Vault 암호화 엔진, AI WebUI 실행을 구현하지 않습니다.
 
+## Phase 1-5c: Linux Base Architecture Lock
+
+Phase 1-5c는 Astra Shell 구현이 아니라 AstraOS의 실제 OS 방향을 Linux LTS 기반 immutable/atomic desktop OS로 문서에 고정하는 단계입니다.
+
+이 단계에서 고정하는 내용:
+
+- AstraOS는 Windows 앱, Web app, 단순 Electron/WebView 앱이 아닙니다.
+- 실제 OS base는 Linux입니다.
+- 커널을 직접 새로 만들지 않습니다.
+- Linux LTS 또는 stable base와 hardware enablement, 보안 업데이트, signed update, rollback 구조로 최신성과 안정성을 확보합니다.
+- 장기 목표는 immutable/atomic root filesystem입니다.
+- Astra Shell은 Linux 위에서 동작하는 독립 Shell 계층입니다.
+
+이 단계에서 하지 않는 것:
+
+- 실제 OS build
+- ISO 생성
+- partition 또는 bootloader 작업
+- Wayland compositor 구현
+- driver 구현
+- package manager 구현
+
+## Phase 1-5e: Real Linux Base + Compatibility Strategy
+
+Phase 1-5e는 실제 구현이 아니라 AstraOS가 장기적으로 실제 부팅 가능한 Linux 기반 OS가 되기 위한 base architecture와 compatibility strategy를 문서화하는 단계입니다.
+
+포함 범위:
+
+- Linux base 후보군 확장: Fedora Atomic/Silverblue, openSUSE Aeon/MicroOS, NixOS, Arch, Debian/Ubuntu LTS
+- rootfs, bootloader, package/update, rollback, driver, graphics stack, Wayland, XDG portal 문서화
+- Windows compatibility 전략 문서화
+- macOS compatibility Experimental track 문서화
+- App Center/Launcher compatibility profile UX 방향 문서화
+
+제외 범위:
+
+- ISO 제작
+- rootfs 생성
+- bootloader 설정
+- driver 설치
+- Wayland compositor 구현
+- Wine/Proton/DXVK/VKD3D-Proton 설치
+- Darling 설치
+- Windows/macOS 앱 실행
+
 ## 완료 기준
 
 - Astra Shell의 역할과 범위가 명확히 정의되어야 합니다.

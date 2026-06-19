@@ -6,6 +6,13 @@
 
 Astra Shell은 AstraOS 사용자 경험의 첫 화면과 기본 조작 모델을 정의하는 데스크톱 shell 계층입니다. Phase 1-0에서 Astra Shell은 실제 OS shell이 아니라 화면 구성, 정보 구조, 모듈 경계, 보안 경계를 검증하기 위한 UI mock 대상입니다.
 
+Phase 1-5c/1-5e 기준으로 Astra Shell의 장기 위치를 다음과 같이 고정합니다.
+
+- AstraOS의 실제 OS base는 Linux LTS 기반 immutable/atomic desktop OS입니다.
+- Astra Shell은 Linux base 위에서 동작하는 독립 Shell 계층입니다.
+- 현재 static mock은 실제 Linux OS, WebView OS, Electron app, Windows app이 아니라 Shell UI prototype입니다.
+- 장기적으로 Wayland session/shell/compositor integration, XDG desktop entry, XDG portal, accessibility, keyboard navigation, theme token 구조를 고려합니다.
+
 ## 역할
 
 Astra Shell의 장기 역할은 다음과 같습니다.
@@ -16,6 +23,10 @@ Astra Shell의 장기 역할은 다음과 같습니다.
 - Settings mock과 Security Center mock을 통한 설정/보안 UX 방향 검증
 - AstraOS의 Modular Evolution Architecture를 사용자 경험 계층에서 표현
 - Balanced Premium Performance 기준에 맞는 빠르고 응답성 있는 shell UX 목표 정의
+- Linux native app이 AstraOS Shell 안에서 자연스럽게 보이도록 window chrome/theme bridge 방향 정의
+- permission broker와 XDG portal을 통한 권한 요청/승인 UX 방향 정의
+- App Center와 Launcher에서 Linux native 앱, Windows compatibility 앱, macOS experimental 앱을 자연스럽게 구분하는 UX 방향 정의
+- compatibility profile의 repair/reset/uninstall 같은 위험 작업을 preview와 사용자 확인 중심으로 표현
 
 ## Phase 1-0 범위
 
@@ -42,6 +53,9 @@ Phase 1-0에서는 다음을 구현하지 않습니다.
 - Vault 암호화 엔진
 - AI WebUI 실행
 - 커널, compositor, Wayland 세션, display manager 구현
+- Linux base install, ISO build, bootloader, partition 작업
+- Wine/Proton/Darling 설치 또는 호환 계층 구현
+- Windows/macOS 앱 실행 또는 compatibility runtime 실행
 
 ## 설계 원칙
 

@@ -102,6 +102,64 @@ Phase 1-2는 package.json, HTML, CSS, TypeScript, JavaScript, WebView 실행 코
 
 Phase 1-2에서는 실제 로그인, 권한 상승, 시스템 설정 변경, 보안 정책 변경, 드라이버 제어, 백신 연동, Secure Delete 실행, Vault 암호화 엔진, AI WebUI 실행, native bridge, OS command API를 구현하지 않습니다.
 
+### Phase 1-5c: Linux Base Architecture Lock
+
+Phase 1-5c는 AstraOS의 실제 OS 방향을 Linux LTS 기반 immutable/atomic desktop OS로 문서에 고정합니다. 산출물은 `docs/decisions/0003-linux-base-architecture.md`입니다.
+
+### Phase 1-5e: Real Linux Base + Compatibility Strategy
+
+Phase 1-5e는 Real Linux Base + Compatibility Strategy를 문서화합니다. 산출물은 `docs/compatibility/compatibility-layer-architecture.md`, `docs/compatibility/windows-app-compatibility.md`, `docs/compatibility/macos-app-compatibility.md`, `docs/decisions/0006-compatibility-strategy.md`, `docs/decisions/0007-linux-base-selection-criteria.md`입니다.
+
+Phase 1-5c/1-5e는 문서/아키텍처 방향 고정 단계입니다. 실제 OS 빌드, ISO 생성, 파티션 작업, 부팅로더 작업, Wayland compositor 구현, Wine/Proton/Darling 설치는 수행하지 않습니다.
+### Phase 1-6: Linux Base Candidate Decision
+
+Phase 1-6에서는 다음 후보를 비교하고 실제 base 선택을 위한 기술 결정을 준비합니다.
+
+| 후보 | 검토 항목 |
+| --- | --- |
+| Fedora Atomic/Silverblue 계열 | rpm-ostree, atomic update, rollback, Flatpak 중심 desktop 경험 |
+| openSUSE Aeon/MicroOS 계열 | transactional update, immutable root, rollback 방향 |
+| NixOS 계열 | declarative system config, generation rollback, reproducibility |
+| Arch 계열 | 최신 kernel/Mesa/desktop stack, hardware freshness |
+| Debian/Ubuntu LTS 계열 | 안정성, ecosystem, hardware/vendor support, LTS 운영 |
+
+선택 기준:
+
+- LTS/stable 유지보수와 보안 업데이트
+- hardware enablement와 드라이버 호환성
+- signed update, atomic deployment, rollback 적합성
+- Wayland/XDG/accessibility/localization 지원
+- 패키지와 앱 배포 모델
+- Astra Shell, permission broker, sandbox, recovery integration 가능성
+- Wine/Proton/DXVK/VKD3D-Proton readiness
+- macOS experimental track feasibility
+
+Phase 1-6에서 실제 ISO를 만들지 않습니다. 먼저 base architecture decision, rootfs/update/rollback model, driver/graphics/Wayland/XDG portal 기준, compatibility layer readiness를 비교합니다.
+
+### Phase 1-7: Compatibility Layer Planning
+
+Phase 1-7은 구현이 아니라 compatibility layer planning입니다.
+
+산출물 후보:
+
+- Windows app compatibility profile spec
+- per-app prefix manifest draft
+- App Center compatibility source model
+- runtime update/rollback policy
+- macOS experimental feasibility ADR
+- compatibility risk register update
+
+Phase 1-7에서도 Wine, Proton, DXVK, VKD3D-Proton, Darling, VM, container를 설치하거나 실행하지 않습니다.
+
+### 실제 OS 구현 전환 로드맵
+
+1. Phase 1-6에서 Linux base 후보 비교표와 ADR 작성
+2. Phase 1-7에서 compatibility layer planning과 package/update/rollback policy 상세화
+3. Phase 1-8에서 Astra Shell native prototype 후보(Qt/QML, Slint, Rust UI, compositor integration)를 재평가
+4. Phase 2에서 Linux userland 위의 제한적 native shell prototype 검토
+5. Phase 2 이후 Wayland session/compositor prototype은 별도 승인, threat model, rollback plan을 갖춘 뒤 진행
+6. ISO, installer, partition, bootloader 작업은 Phase 3 이후 별도 승인 전까지 금지
+
 후보 작업:
 
 - 저장소 디렉터리 구조 확정

@@ -37,9 +37,61 @@ AstraOS의 보안 모델은 방어적 보안, 사용자 소유 데이터 보호,
 | --- | --- | --- |
 | 사용자 데이터 경계 | 개인 파일, Vault 데이터, 설정 | 명시적 권한과 감사 |
 | 시스템 이미지 경계 | immutable/atomic OS 이미지 | 서명, 검증, rollback |
+| Linux Base 경계 | kernel, driver, system service, package/update chain | LTS/stable 기반, hardware enablement, signed update |
+| Astra Shell 경계 | desktop session, app launch UX, quick panels, notifications | Wayland/XDG 표준, permission broker, 실제 OS 제어 연결 금지 |
 | 모듈 경계 | Shield, Guardian, AI Studio, 앱 | manifest, sandbox, 권한 프로필 |
+| Compatibility 경계 | Windows compatibility, macOS experimental runtime/profile | per-app isolation, permission broker, 우회 기능 금지 |
 | 네트워크 경계 | 외부 API, 업데이트 서버, WebUI | localhost 기본값, 인증, 사용자 확인 |
 | AI 도구 경계 | 모델, 플러그인, custom node, 스크립트 | sandbox, 파일/네트워크 제한 |
+
+## Linux Base 보안 방향
+
+Phase 1-5c 기준 AstraOS는 Linux LTS 기반 immutable/atomic desktop OS 방향을 따릅니다. 커널을 직접 제작하지 않고 검증된 Linux LTS 또는 stable base의 kernel stream과 hardware enablement 정책을 사용합니다.
+
+보안 업데이트와 최신성은 다음 조합으로 확보합니다.
+
+- LTS/stable kernel과 distribution security update
+- hardware enablement stream 검토
+- signed package/image update
+- atomic deployment와 rollback
+- recovery-first update flow
+- root filesystem과 user data 분리
+
+실제 kernel patch, driver, bootloader, ISO, partition 작업은 현재 문서 범위 밖입니다.
+
+## Astra Shell 권한 모델 방향
+
+Astra Shell은 Linux 위에서 동작하는 독립 Shell 계층이며, 사용자 경험을 담당하지만 모든 privileged operation을 직접 수행하지 않습니다.
+
+권한 모델 방향:
+
+- 앱 실행, 파일 접근, clipboard, camera, microphone, screen capture는 XDG portal 또는 permission broker를 통해 중재합니다.
+- Wayland session과 compositor integration은 이후 Phase에서 별도 threat model과 rollback plan을 갖춘 뒤 검토합니다.
+- Shell UI는 system setting 변경, 보안 정책 변경, package install, Secure Delete, Vault unlock 같은 위험 작업을 직접 실행하지 않고 사용자 확인, preview, dry-run, rollback 경계를 요구합니다.
+- Linux native app은 AstraOS window chrome/theme bridge 안에서 자연스럽게 보이도록 하되 앱 sandbox와 접근성 표준을 깨지 않습니다.
+
+## Compatibility Layer 보안 방향
+
+Compatibility layer는 Windows 앱 호환성과 macOS 앱 호환성 실험 트랙을 준비하지만, 공격 도구나 우회 도구가 아닙니다.
+
+Windows compatibility 보안 원칙:
+
+- Wine/Proton/DXVK/VKD3D-Proton은 후보로만 문서화하며 현재 설치하지 않습니다.
+- app별 prefix를 격리합니다.
+- host filesystem 전체 접근은 기본 차단합니다.
+- file, clipboard, network, camera, microphone, screen capture는 permission broker 또는 XDG portal 경유를 원칙으로 합니다.
+- prefix repair/reset/uninstall은 위험 작업으로 분류하고 preview와 사용자 확인을 요구합니다.
+- anti-cheat bypass, DRM bypass, license bypass, 보안 도구 우회는 금지합니다.
+
+macOS compatibility 보안 원칙:
+
+- macOS compatibility는 Experimental track입니다.
+- Darling, VM, container, remote 방식은 조사 후보이며 현재 실행하지 않습니다.
+- macOS GUI 앱 완전 호환을 초기 목표로 약속하지 않습니다.
+- Apple signing, DRM, license 우회는 금지합니다.
+- `.app` bundle import와 plist/framework 분석은 문서/metadata 조사 단계로 제한합니다.
+
+Compatibility runtime update는 OS base update와 분리하고, runtime version pinning, rollback, failed migration recovery를 이후 Phase에서 검토합니다.
 
 ## Secure Delete 보안 정의
 
