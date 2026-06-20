@@ -102,18 +102,25 @@ Phase 1-2는 package.json, HTML, CSS, TypeScript, JavaScript, WebView 실행 코
 
 Phase 1-2에서는 실제 로그인, 권한 상승, 시스템 설정 변경, 보안 정책 변경, 드라이버 제어, 백신 연동, Secure Delete 실행, Vault 암호화 엔진, AI WebUI 실행, native bridge, OS command API를 구현하지 않습니다.
 
-### Phase 1-5c: Linux Base Architecture Lock
+### Phase 1-3: Astra Shell Static WebView Mock Scaffold
 
-Phase 1-5c는 AstraOS의 실제 OS 방향을 Linux LTS 기반 immutable/atomic desktop OS로 문서에 고정합니다. 산출물은 `docs/decisions/0003-linux-base-architecture.md`입니다.
+Phase 1-3은 실제 WebView 앱이 아니라 브라우저에서 열 수 있는 static mock scaffold입니다. HTML/CSS/JavaScript는 로컬 mock data, hash route, 디자인 토큰, KO/EN string key 구조만 다루며 실제 OS 제어 기능과 연결하지 않습니다.
 
-### Phase 1-5d: AstraOS Visual Design Language Lock
+### Phase 1-4: Static Mock UI Polish + Accessibility Pass
 
-Phase 1-5d는 Astra Design Language를 macOS-inspired calm desktop + One UI-inspired soft component 감성의 고유 hybrid 시스템으로 고정합니다. 산출물은 `docs/design/astra-design-language.md`와 `docs/decisions/0005-astra-design-language.md`입니다.
-### Phase 1-5e: Real Linux Base + Compatibility Strategy
+Phase 1-4는 static mock의 visual hierarchy, 반응형, focus state, reduced motion, 접근성 구조를 다듬는 단계입니다. native bridge, OS command API, storage API, 외부 네트워크, 실제 로그인, 실제 보안 상태 검사는 계속 금지합니다.
 
-Phase 1-5e는 Real Linux Base + Compatibility Strategy를 문서화합니다. 산출물은 `docs/compatibility/compatibility-layer-architecture.md`, `docs/compatibility/windows-app-compatibility.md`, `docs/compatibility/macos-app-compatibility.md`, `docs/decisions/0006-compatibility-strategy.md`, `docs/decisions/0007-linux-base-selection-criteria.md`입니다.
+### Phase 1-5: OS-like Layout Direction
+
+Phase 1-5 계열은 Astra Shell이 웹 대시보드가 아니라 desktop shell처럼 보이도록 layout direction을 조정하는 단계입니다.
+
+- Phase 1-5b: macOS처럼 정갈한 디자인 결과 Windows처럼 익숙한 desktop flow를 static mock에 반영합니다.
+- Phase 1-5c: Linux LTS 기반 immutable/atomic desktop OS 방향을 문서에 고정합니다. 산출물은 `docs/decisions/0003-linux-base-architecture.md`입니다.
+- Phase 1-5d: Astra Design Language를 macOS-inspired calm desktop + One UI-inspired soft component 감성의 고유 hybrid 시스템으로 고정합니다. 산출물은 `docs/design/astra-design-language.md`와 `docs/decisions/0005-astra-design-language.md`입니다.
+- Phase 1-5e: Real Linux Base + Compatibility Strategy를 문서화합니다. 산출물은 `docs/compatibility/compatibility-layer-architecture.md`, `docs/compatibility/windows-app-compatibility.md`, `docs/compatibility/macos-app-compatibility.md`, `docs/decisions/0006-compatibility-strategy.md`, `docs/decisions/0007-linux-base-selection-criteria.md`입니다.
 
 Phase 1-5c/1-5d/1-5e는 문서/아키텍처 방향 고정 단계입니다. 실제 OS 빌드, ISO 생성, 파티션 작업, 부팅로더 작업, Wayland compositor 구현, Wine/Proton/Darling 설치는 수행하지 않습니다.
+
 ### Phase 1-6: Linux Base Candidate Decision
 
 Phase 1-6에서는 다음 후보를 비교하고 실제 base 선택을 위한 기술 결정을 준비합니다.

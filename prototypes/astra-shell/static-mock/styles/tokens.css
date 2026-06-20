@@ -1,35 +1,36 @@
 :root {
   color-scheme: dark;
 
-  --color-surface-base: #071113;
-  --color-surface-base-deep: #03090a;
-  --color-surface-rail: rgba(4, 15, 17, 0.76);
-  --color-surface-elevated: rgba(16, 28, 31, 0.86);
-  --color-surface-panel: rgba(22, 35, 39, 0.78);
-  --color-surface-panel-strong: rgba(31, 45, 48, 0.94);
-  --color-surface-control: rgba(255, 255, 255, 0.07);
-  --color-surface-control-hover: rgba(255, 255, 255, 0.12);
-  --color-surface-control-active: rgba(85, 215, 210, 0.18);
-  --color-border-subtle: rgba(210, 244, 238, 0.15);
-  --color-border-strong: rgba(210, 244, 238, 0.28);
-  --color-border-focus: rgba(85, 215, 210, 0.9);
+  --color-surface-base: #101622;
+  --color-surface-base-deep: #060a12;
+  --color-surface-rail: rgba(15, 22, 34, 0.64);
+  --color-surface-elevated: rgba(251, 253, 255, 0.12);
+  --color-surface-panel: rgba(248, 252, 255, 0.14);
+  --color-surface-panel-strong: rgba(20, 27, 39, 0.82);
+  --color-surface-control: rgba(255, 255, 255, 0.12);
+  --color-surface-control-hover: rgba(255, 255, 255, 0.18);
+  --color-surface-control-active: rgba(161, 194, 255, 0.24);
+  --color-border-subtle: rgba(248, 252, 255, 0.24);
+  --color-border-strong: rgba(248, 252, 255, 0.36);
+  --color-border-focus: rgba(182, 214, 255, 0.94);
 
-  --color-text-primary: #f1fbf8;
-  --color-text-secondary: #b5c7c2;
-  --color-text-muted: #849893;
-  --color-text-disabled: #65746f;
+  --color-text-primary: #f8fbff;
+  --color-text-secondary: #d4deea;
+  --color-text-muted: #a5b4c5;
+  --color-text-disabled: #748397;
 
-  --color-accent-primary: #55d7d2;
-  --color-accent-secondary: #77aefb;
-  --color-accent-soft: rgba(85, 215, 210, 0.16);
-  --color-safe: #75d18a;
-  --color-warn: #edc969;
-  --color-blocked: #ed7d7d;
-  --color-info: #77aefb;
-  --color-safe-soft: rgba(117, 209, 138, 0.16);
-  --color-warn-soft: rgba(237, 201, 105, 0.16);
-  --color-blocked-soft: rgba(237, 125, 125, 0.14);
-  --color-info-soft: rgba(119, 174, 251, 0.15);
+  --color-accent-primary: #a7c7ff;
+  --color-accent-secondary: #d7b8ee;
+  --color-accent-warm: #f2c49d;
+  --color-accent-soft: rgba(167, 199, 255, 0.22);
+  --color-safe: #94d8b1;
+  --color-warn: #e3c27b;
+  --color-blocked: #df938e;
+  --color-info: #aac8f7;
+  --color-safe-soft: rgba(148, 216, 177, 0.18);
+  --color-warn-soft: rgba(227, 194, 123, 0.16);
+  --color-blocked-soft: rgba(223, 147, 142, 0.14);
+  --color-info-soft: rgba(170, 200, 247, 0.18);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -39,18 +40,19 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  --radius-control: 8px;
-  --radius-card: 8px;
-  --radius-panel: 12px;
-  --radius-shell: 18px;
+  --radius-control: 12px;
+  --radius-card: 18px;
+  --radius-panel: 28px;
+  --radius-shell: 30px;
   --radius-round: 999px;
 
-  --shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.34);
-  --shadow-panel-strong: 0 24px 64px rgba(0, 0, 0, 0.42);
-  --shadow-control: 0 8px 18px rgba(0, 0, 0, 0.22);
-  --shadow-active: 0 0 0 1px rgba(85, 215, 210, 0.18), 0 14px 28px rgba(85, 215, 210, 0.08);
-  --blur-panel: blur(18px);
-  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-panel: 0 22px 54px rgba(0, 0, 0, 0.32);
+  --shadow-panel-strong: 0 32px 86px rgba(0, 0, 0, 0.42);
+  --shadow-control: 0 10px 24px rgba(0, 0, 0, 0.2);
+  --shadow-active: 0 0 0 1px rgba(167, 199, 255, 0.22), 0 18px 36px rgba(91, 121, 190, 0.14);
+  --blur-panel: blur(26px);
+  --mica-texture: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06) 42%, rgba(167, 199, 255, 0.08));
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 
   --font-sans: Inter, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
   --font-size-label: 0.78rem;
@@ -76,11 +78,12 @@
 }
 
 .low-resource-mode {
-  --color-surface-panel: rgba(22, 35, 39, 0.97);
-  --color-surface-rail: rgba(4, 15, 17, 0.98);
+  --color-surface-panel: rgba(20, 27, 39, 0.97);
+  --color-surface-rail: rgba(8, 14, 23, 0.98);
   --color-surface-control: rgba(255, 255, 255, 0.09);
   --shadow-panel: 0 8px 20px rgba(0, 0, 0, 0.28);
   --shadow-panel-strong: 0 10px 28px rgba(0, 0, 0, 0.32);
-  --shadow-active: 0 0 0 1px rgba(85, 215, 210, 0.2);
+  --shadow-active: 0 0 0 1px rgba(167, 199, 255, 0.2);
   --blur-panel: blur(0);
+  --mica-texture: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
 }

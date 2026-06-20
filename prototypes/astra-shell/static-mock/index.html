@@ -18,71 +18,13 @@
     <a class="skip-link" href="#main-content" data-i18n="action.skipToContent">본문으로 이동</a>
 
     <noscript>
-      Astra Shell static mock requires JavaScript for local-only screen switching. No OS command, native bridge, or network request is used.
+      Astra Shell static mock requires JavaScript for local-only screen switching. No OS command, native bridge, storage API, or network request is used.
     </noscript>
 
-    <div class="app-shell" id="app" data-route="/login" data-phase="1-5">
-      <aside class="route-rail" aria-labelledby="route-nav-title">
-        <div class="brand-block">
-          <div class="brand-mark" aria-hidden="true">A</div>
-          <div>
-            <p class="eyebrow" data-i18n="app.phase">Phase 1-5</p>
-            <h1 data-i18n="app.name">Astra Shell</h1>
-          </div>
-        </div>
+    <main class="shell-stage" id="main-content" tabindex="-1" aria-label="Astra Shell static mock">
+      <section class="screen-root" id="screen-root" aria-live="polite" tabindex="-1"></section>
+    </main>
 
-        <h2 class="visually-hidden" id="route-nav-title" data-i18n="nav.screens">화면 이동</h2>
-        <nav class="route-list" id="route-list" aria-labelledby="route-nav-title">
-          <button class="route-button" type="button" data-route="/login" data-i18n="route.login.title">로그인</button>
-          <button class="route-button" type="button" data-route="/desktop" data-i18n="route.desktop.title">데스크톱</button>
-          <button class="route-button" type="button" data-route="/dock" data-i18n="route.dock.title">Dock</button>
-          <button class="route-button" type="button" data-route="/launcher" data-i18n="route.launcher.title">런처</button>
-          <button class="route-button" type="button" data-route="/control-center" data-i18n="route.controlCenter.title">제어 센터</button>
-          <button class="route-button" type="button" data-route="/notifications" data-i18n="route.notifications.title">알림 센터</button>
-          <button class="route-button" type="button" data-route="/workspaces" data-i18n="route.workspaces.title">작업 공간</button>
-          <button class="route-button" type="button" data-route="/settings" data-i18n="route.settings.title">설정 mock</button>
-          <button class="route-button" type="button" data-route="/security-center" data-i18n="route.securityCenter.title">보안 센터 mock</button>
-        </nav>
-
-        <div class="language-switcher" role="group" aria-labelledby="language-switcher-title">
-          <span class="visually-hidden" id="language-switcher-title" data-i18n="nav.language">언어 mock 전환</span>
-          <button class="compact-button" type="button" data-locale="ko">KO</button>
-          <button class="compact-button" type="button" data-locale="en">EN</button>
-        </div>
-      </aside>
-
-      <main class="shell-stage" id="main-content" tabindex="-1">
-        <header class="top-bar">
-          <div>
-            <p class="eyebrow" id="route-eyebrow">Static mock only</p>
-            <h2 id="route-title">Astra Shell</h2>
-          </div>
-          <div class="status-cluster" aria-label="Mock shell status">
-            <span class="status-pill status-local" data-i18n="status.localOnly">로컬 전용</span>
-            <span class="status-pill status-mock" data-i18n="status.mockOnly">mock 상태</span>
-            <span class="status-pill status-disabled" data-i18n="status.noBridge">native bridge 없음</span>
-            <button
-              class="status-pill status-button"
-              id="low-resource-toggle"
-              type="button"
-              data-action="toggle-setting"
-              data-setting-key="lowResourceMode"
-              aria-pressed="false"
-            >
-              Low resource mock off
-            </button>
-          </div>
-        </header>
-
-        <section class="safety-banner" aria-label="Phase 1-5 safety boundary">
-          <strong data-i18n="security.boundaryTitle">Phase 1-5 보안 경계</strong>
-          <span data-i18n="security.boundaryBody">정적 UI mock이며 실제 로그인, 권한 상승, OS 제어 기능, 보안 상태 검사를 수행하지 않습니다.</span>
-        </section>
-
-        <section class="screen-root" id="screen-root" aria-live="polite" tabindex="-1"></section>
-      </main>
-
-      <div class="toast-region" id="toast-root" aria-live="polite" aria-atomic="true"></div>
-    </div>
+    <div class="toast-region" id="toast-root" aria-live="polite" aria-atomic="true"></div>
   </body>
 </html>
